@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USA Studio - Global Users Control Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a1d, #4e0f0f);
+            color: #fff;
+            padding: 20px;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 750px;
+            padding: 30px;
+            background: rgba(20, 20, 25, 0.92);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(255, 0, 0, 0.25);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-header h2 {
+            color: #ff1744;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .admin-header p {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .status-box {
+            background: rgba(255, 23, 68, 0.1);
+            border-left: 4px solid #ff1744;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* Scrollable Users Database Container */
+        .users-list-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 320px;
+            margin-bottom: 15px;
+            padding-right: 5px;
+        }
+
+        .users-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .users-list-container::-webkit-scrollbar-thumb {
+            background: #ff1744;
+            border-radius: 10px;
+        }
+
+        .user-profile-card {
+            background: rgba(0, 230, 118, 0.05);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.2s;
+        }
+
+        .user-profile-card:hover {
+            background: rgba(0, 230, 118, 0.1);
+        }
+
+        .user-dp {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #00e676;
+            object-fit: cover;
+            background: #222;
+        }
+
+        .user-details {
+            font-size: 12px;
+            color: #fff;
+            word-break: break-all;
+            flex-grow: 1;
+        }
+
+        .user-details strong {
+            color: #00e676;
+            font-size: 13px;
+        }
+
+        .delete-single-btn {
+            background: #ff1744;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .delete-single-btn:hover {
+            background: #d50000;
+        }
+
+        .admin-tools {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .admin-tools textarea {
+            width: 100%;
+            padding: 8px 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #555;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            margin-top: 6px;
+            margin-bottom: 8px;
+            outline: none;
+        }
+
+        .admin-tools textarea:focus {
+            border-color: #ff1744;
+        }
+
+        .tool-btn {
+            padding: 6px 12px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tool-btn:hover {
+            background: #555;
+        }
+
+        .control-group {
+            margin-bottom: 10px;
+        }
+
+        .control-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-clear-all {
+            background: linear-gradient(135deg, #ff1744, #b71c1c);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 23, 68, 0.4);
+        }
+
+        .btn-clear-all:hover {
+            background: linear-gradient(135deg, #ff3366, #d50000);
+        }
+
+        .btn-safe {
+            background: linear-gradient(135deg, #00e676, #00c853);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 230, 118, 0.3);
+        }
+
+        .btn-safe:hover {
+            background: linear-gradient(135deg, #33eb91, #009624);
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid #666;
+            color: #aaa;
+            padding: 8px;
+        }
+
+        .btn-back:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h2>🛡️ Global Users Database Control</h2>
+            <p>USA Studio - Monitoring All Logged-In Members</p>
+        </div>
+
+        <div class="status-box">
+            <strong>System Database Status:</strong> Active.<br>
+            <span style="font-size: 11px; color: #aaa;" id="totalUsersCount">Total Registered Users: 0</span>
+        </div>
+
+        <!-- Scrollable List of All Users -->
+        <div class="users-list-container" id="usersListContainer">
+            <!-- Dynamic Users Will Load Here -->
+        </div>
+
+        <!-- Global Broadcast Tool -->
+        <div class="admin-tools">
+            <label style="font-size: 12px; color: #00e676; font-weight: bold;">📢 Broadcast Global Notice to All Users:</label>
+            <textarea id="adminGlobalNotice" placeholder="Type system notice or warning for all members..." rows="2"></textarea>
+            <button onclick="sendGlobalNotice()" class="tool-btn">Send Broadcast Notice</button>
+        </div>
+
+        <div class="control-group">
+            <!-- Clear Entire Database -->
+            <button onclick="clearAllUsers()" class="control-btn btn-clear-all">🚨 Clear Entire User Database</button>
+            
+            <!-- Safe Official Channel Link Button -->
+            <a href="https://youtube.com/@zee-zindagi-786" target="_blank" class="control-btn btn-safe">✅ Open Official Channel</a>
+        </div>
+
+        <div class="control-group">
+            <a href="index.html" class="control-btn btn-back">Logout to Login Portal</a>
+        </div>
+    </div>
+
+    <script>
+        // Load all registered users from localStorage on page load
+        window.onload = function() {
+            renderUsersList();
+        };
+
+        function renderUsersList() {
+            let container = document.getElementById('usersListContainer');
+            let countLabel = document.getElementById('totalUsersCount');
+            
+            // Fetching stored array or fallback to empty
+            let users = JSON.parse(localStorage.getItem('usaStudioUsersDatabase')) || [];
+            
+            countLabel.innerText = "Total Registered Users: " + users.length;
+            container.innerHTML = "";
+
+            if (users.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: #777; padding: 25px; font-size: 13px;">No users registered in the database yet. New logins will appear here automatically.</div>`;
+                return;
+            }
+
+            // Loop through each user to display them in the database dashboard
+            users.forEach((user, index) => {
+                let card = document.createElement('div');
+                card.className = 'user-profile-card';
+                card.innerHTML = `
+                    <img src="${user.dp}" alt="DP" class="user-dp">
+                    <div class="user-details">
+                        <strong>User #${index + 1}: ${user.name}</strong><br>
+                        📧 Email: ${user.email}<br>
+                        🔑 Password: ${user.password}<br>
+                        🕒 Logged In: ${user.time}
+                    </div>
+                    <button class="delete-single-btn" onclick="deleteSingleUser(${index})">Remove</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Broadcast global notice to all users
+        function sendGlobalNotice() {
+            let noticeText = document.getElementById('adminGlobalNotice').value;
+            if (noticeText.trim() !== "") {
+                localStorage.setItem('adminGlobalWarning', noticeText);
+                alert("📢 Global notice successfully broadcasted to all platform members!");
+                document.getElementById('adminGlobalNotice').value = "";
+            } else {
+                alert("⚠️ Please enter a notice message.");
+            }
+        }
+
+        // Remove a single user from database array
+        function deleteSingleUser(index) {
+            let users = JSON.parse(localStorage.getItem('usaStudioUsersDatabase')) || [];
+            let confirmDel = confirm(`⚠️ Are you sure you want to remove user: ${users[index].email}?`);
+            if (confirmDel) {
+                users.splice(index, 1);
+                localStorage.setItem('usaStudioUsersDatabase', JSON.stringify(users));
+                renderUsersList();
+            }
+        }
+
+        // Clear all database records
+        function clearAllUsers() {
+            let confirmClear = confirm("⚠️ WARNING: This will permanently delete all registered user records from the database!");
+            if (confirmClear) {
+                localStorage.removeItem('usaStudioUsersDatabase');
+                renderUsersList();
+                alert("🚫 All user records cleared!");
+            }
+        }
+    </script>
+</body>
+</html>
